@@ -1,0 +1,28 @@
+{
+    "python.autoComplete.extraPaths": [
+        ".micropy/micropython_stdlib_stubs-1.1.1/stdlib",
+        ".micropy/micropython_esp32_ota_stubs-1.20.0.post2",
+        ".micropy/BradenM-micropy-stubs-4f5a52a/frozen",
+        ".micropy/vitopy",
+        "src/lib"
+    ],
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportMissingModuleSource": "none"
+    },
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.typeshedPaths": [
+        ".micropy/micropython_stdlib_stubs-1.1.1/stdlib",
+        ".micropy/micropython_esp32_ota_stubs-1.20.0.post2",
+        ".micropy/BradenM-micropy-stubs-4f5a52a/frozen",
+        ".micropy/vitopy",
+        "typings",
+        "src/lib"
+    ],
+    "python.analysis.extraPaths": [
+        ".micropy/micropython_stdlib_stubs-1.1.1/stdlib",
+        ".micropy/micropython_esp32_ota_stubs-1.20.0.post2",
+        ".micropy/BradenM-micropy-stubs-4f5a52a/frozen",
+        ".micropy/vitopy",
+        "src/lib"
+    ],
+}

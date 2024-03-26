@@ -1,0 +1,15 @@
+{
+    "name": "vitopy",
+    "stubs": {
+        "micropython-stdlib-stubs": "1.1.1",
+        "micropython-esp32-ota-stubs": "1.20.0.post2"
+    },
+    "dev-packages": {
+        "micropy-cli": "*"
+    },
+    "packages": {},
+    "config": {
+        "vscode": true,
+        "pylint": true
+    }
+}

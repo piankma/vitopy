@@ -1,0 +1,6 @@
+{
+    "recommendations": [
+        "ms-python.python", // micropy-cli: required for vscode micropython integrations
+        "VisualStudioExptTeam.vscodeintellicode" // micropy-cli: optional for advanced intellisense
+    ]
+}
