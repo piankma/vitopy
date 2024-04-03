@@ -1,7 +1,5 @@
 import asyncio
-import machine
 import network
-import ntptime
 import time
 import project
 
@@ -11,7 +9,6 @@ from iotfx.singleton import singleton
 
 cfg = Config("network")
 log = Logging("NET")
-log_ntp = Logging("NTP")
 
 AUTH_MODE = {
     "0": "OPEN",
@@ -123,13 +120,13 @@ class Networking:
             network.hostname(configured_hostname)
             return network.hostname()
 
-        hostname = self.generate_hostname()
-        if len(await hostname) > 16:
+        hostname = await self.generate_hostname()
+        if len(hostname) > 16:
             raise ValueError("Hostname must be 16 characters or less")
 
         log.info(f"Setting hostname to generated: {hostname}")
         network.hostname(hostname)
-        await cfg.set(HOSTNAME_KEY, await hostname)
+        await cfg.set(HOSTNAME_KEY, hostname)
 
         return network.hostname()
 
@@ -184,18 +181,6 @@ class Networking:
 
         macaddr = self.wlan_sta.config("mac").hex()[-6:]
         return f"{self._app_name.lower()}_{macaddr}"
-
-    async def sync_ntp(self):
-        """
-        Synchronizes the device's time with an NTP server.
-
-        Returns:
-            tuple(int, int, int, int, int, int, int, int): The current date and time
-        """
-        rtc = machine.RTC()
-        ntptime.settime()
-        log_ntp.info(f"Time synchronized with NTP server, it's now {rtc.datetime()}")
-        return rtc.datetime()
 
     async def scan(self):
         """
@@ -334,6 +319,7 @@ class Networking:
         if not self.wlan_sta.active():
             self.wlan_sta.active(True)
 
+        await self.set_hostname()
         self.wlan_sta.connect(ssid, password)
         start_time = time.time()
         start_time_error = None
@@ -369,8 +355,20 @@ class Networking:
             await asyncio.sleep(1)
 
         log.info(f"Connected to {ssid}")
+        ifconf = self.wlan_sta.ifconfig()
+
+        diag_msg = {
+            "MAC": self.wlan_sta.config("mac").hex(":"),
+            "IP": ifconf[0],
+            "Netmask": ifconf[1],
+            "Gateway": ifconf[2],
+            "DNS": ifconf[3],
+            "Channel": self.wlan_sta.config("channel"),
+            "Hostname": await self.get_hostname(),
+        }
+
+        log.info("Diagnostic data:", **diag_msg)
         if callback_connected:
-            ifconf = self.wlan_sta.ifconfig()
             callback_connected(
                 ssid,
                 self.wlan_sta.status("rssi"),

@@ -9,6 +9,8 @@ class Logging:
         Args:
             tag (str): The tag to be used in the logs.
         """
+        assert len(tag) <= 5, "Tag must be 5 characters or less."
+
         self.tag = tag
 
         # shorthand for logging levels
@@ -20,7 +22,7 @@ class Logging:
 
     def _log(self, level: str, message: str, **fields):
         # TODO: remote logger
-        message = f"[{level:>5}] {time.time():>8}: {self.tag} - {message}"
+        message = f"[{level:>5}] {time.time():>8}: {self.tag:>5} - {message}"
         prefix_len = message.index(" - ") + 5
         for k, v in fields.items():
             message += f"\n{' '*prefix_len}{k}: {v}"
